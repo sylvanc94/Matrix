@@ -3,7 +3,6 @@
 //  Matrix
 //
 //  Created by Sylvan Canales on 8/3/21.
-//  Copyright © 2021 Sylvan Canales. All rights reserved.
 //
 
 #ifndef MYMAT_H
@@ -47,7 +46,7 @@ public:
 
     MyMat(MyMat &&) noexcept = default;
     MyMat& operator=(MyMat &&) noexcept = default;
-
+    
     static MyMat identity();
     static MyMat upperTriangular();
     static MyMat lowerTriangular();
@@ -55,6 +54,7 @@ public:
     MyMat& toDiagonal();
     MyMat& toUpperTriangular();
     MyMat& toLowerTriangular();
+    MyMat& transpose();
 
     constexpr typename std::array<T,R*C>::iterator begin() noexcept { return data_.begin(); }
     constexpr typename std::array<T,R*C>::const_iterator begin() const noexcept { return data_.begin(); }
@@ -66,8 +66,8 @@ public:
 
     constexpr size_t size() const noexcept { return data_.size(); }
     constexpr bool  empty() const noexcept { return data_.empty(); }
-    constexpr size_t rows() const noexcept { return R; }
-    constexpr size_t cols() const noexcept { return C; }
+    constexpr size_t rows() const noexcept;
+    constexpr size_t cols() const noexcept;
     constexpr bool square() const { return R == C; }
 
           T& operator() (size_t row, size_t col);
@@ -88,11 +88,11 @@ public:
         return lhs;
     }
 
+    std::ostream& renderToStream(std::ostream &) const;
+
 private:
     std::array<T,R*C> data_;
-
-          T& operator[](size_t i);
-    const T& operator[](size_t i) const;
+    bool transposed_ = false;
 };
 
 // Scalar multiplication and division
@@ -102,6 +102,11 @@ template <typename T, size_t R, size_t C>
 MyMat<T,R,C> operator*(const MyMat<T,R,C> &, double);
 template <typename T, size_t R, size_t C>
 MyMat<T,R,C> operator/(const MyMat<T,R,C> &, double);
+
+// Comparison
+// Note that the matrices may be of different template dimension, but if transposed they can still be logically equal
+template <typename T, size_t R, size_t C, size_t R2, size_t C2>
+bool operator==(const MyMat<T, R, C> &, const MyMat<T, R2, C2> &);
 
 // Render the vector contents to the output stream
 template <typename T, size_t R, size_t C>

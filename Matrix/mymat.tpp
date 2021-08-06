@@ -3,7 +3,6 @@
 //  Matrix
 //
 //  Created by Sylvan Canales on 8/3/21.
-//  Copyright © 2021 Sylvan Canales. All rights reserved.
 //
 
 #include <algorithm>
@@ -31,7 +30,7 @@ MyMat<T,R,C> MyMat<T,R,C>::identity()
     static_assert (R > 0, "Identity matrix can't be empty");
     MyMat<T,R,C> id;
     for (size_t i = 0; i < R*C; i += C + 1) {
-        id[i] = 1;
+        id.data_[i] = 1;
     }
     return id;
 }
@@ -89,6 +88,13 @@ MyMat<T,R,C>& MyMat<T,R,C>::toUpperTriangular()
 }
 
 template <typename T, size_t R, size_t C>
+MyMat<T,R,C>& MyMat<T,R,C>::transpose()
+{
+    transposed_ = !transposed_;
+    return *this;
+}
+
+template <typename T, size_t R, size_t C>
 MyMat<T,R,C>& MyMat<T,R,C>::toLowerTriangular()
 {
     for (size_t i = 0; i < R; ++i) {
@@ -100,27 +106,39 @@ MyMat<T,R,C>& MyMat<T,R,C>::toLowerTriangular()
 }
 
 template <typename T, size_t R, size_t C>
+constexpr
+size_t MyMat<T,R,C>::rows() const noexcept
+{
+    return transposed_ ? C : R;
+}
+
+template <typename T, size_t R, size_t C>
+constexpr
+size_t MyMat<T,R,C>::cols() const noexcept
+{
+    return transposed_ ? R : C;
+}
+
+template <typename T, size_t R, size_t C>
 T& MyMat<T,R,C>::operator()(size_t row, size_t col)
 {
-    return data_[row * C + col];
+    if (transposed_) {
+        return data_[col * C + row];
+    }
+    else {
+        return data_[row * C + col];
+    }
 }
 
 template <typename T, size_t R, size_t C>
 const T& MyMat<T,R,C>::operator()(size_t row, size_t col) const
 {
-    return data_[row * C + col];
-}
-
-template <typename T, size_t R, size_t C>
-T& MyMat<T,R,C>::operator[](size_t i)
-{
-    return data_[i];
-}
-
-template <typename T, size_t R, size_t C>
-const T& MyMat<T,R,C>::operator[](size_t i) const
-{
-    return data_[i];
+    if (transposed_) {
+        return data_[col * C + row];
+    }
+    else {
+        return data_[row * C + col];
+    }
 }
 
 template <typename T, size_t R, size_t C>
@@ -142,6 +160,21 @@ MyMat<T,R,C>& MyMat<T,R,C>::operator*=(double rhs)
 {
     std::for_each(begin(), end(), [rhs](double &v) { v *= rhs; });
     return *this;
+}
+
+template <typename T, size_t R, size_t C>
+std::ostream& MyMat<T,R,C>::renderToStream(std::ostream &os) const
+{
+    auto numRows = rows();
+    auto numCols = cols();
+    for (size_t i = 0; i < numRows; ++i) {
+        for (size_t j = 0; j < numCols; ++j) {
+            os << (*this)(i,j) << " ";
+        }
+        os << "\n";
+    }
+
+    return os;
 }
 
 // Related non-members
@@ -169,14 +202,30 @@ MyMat<T,R,C> operator/(const MyMat<T,R,C> &vec, double scalar)
     return result;
 }
 
+template <typename T, size_t R, size_t C, size_t R2, size_t C2>
+bool operator==(const MyMat<T,R,C> &lhs, const MyMat<T,R2,C2> &rhs)
+{
+    // Do the rows and columns match? (Taking into account whether the matrix is transposed internally)
+    auto numRows = lhs.rows();
+    auto numCols = lhs.cols();
+
+    if (numRows != rhs.rows() ||
+        numCols != rhs.cols()) {
+        return false;
+    }
+
+    for (size_t i = 0; i < numRows; ++i) {
+        for (size_t j = 0; j < numCols; ++j) {
+            if (lhs(i,j) != rhs(i,j)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 template <typename T, size_t R, size_t C>
 std::ostream& operator<<(std::ostream &os, const MyMat<T,R,C> &m)
 {
-    for (size_t row = 0; row < R; ++row) {
-        for (size_t col = 0; col < C; ++col) {
-            os << m(row, col) << " ";
-        }
-        os << "\n";
-    }
-    return os;
+    return m.renderToStream(os);
 }

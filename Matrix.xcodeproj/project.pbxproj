@@ -25,8 +25,8 @@
 /* Begin PBXFileReference section */
 		AD74125526BB964700109449 /* Matrix */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Matrix; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD74125826BB964700109449 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		AD74125F26BB969600109449 /* myvec.tpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = myvec.tpp; sourceTree = "<group>"; };
-		AD74126026BB969600109449 /* mymat.tpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mymat.tpp; sourceTree = "<group>"; };
+		AD74125F26BB969600109449 /* myvec.tpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = myvec.tpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		AD74126026BB969600109449 /* mymat.tpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = mymat.tpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		AD74126126BB969700109449 /* myvec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myvec.h; sourceTree = "<group>"; };
 		AD74126226BB969700109449 /* mymat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mymat.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */

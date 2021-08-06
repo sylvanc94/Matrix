@@ -3,7 +3,6 @@
 //  Matrix
 //
 //  Created by Sylvan Canales on 8/3/21.
-//  Copyright © 2021 Sylvan Canales. All rights reserved.
 //
 
 #ifndef MYVEC_H
