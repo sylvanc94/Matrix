@@ -96,6 +96,10 @@ int main()
 
     cout << (matA == matB) << endl;
     cout << (matA == matB.transpose()) << endl;
-
+    
+    MyVec<double> normVec { 1, 1, 1};
+    cout << normVec << ",  " << normVec.normalize() << endl;
+    cout << (normVec == normVec) << endl;
+    
     return 0;
 }

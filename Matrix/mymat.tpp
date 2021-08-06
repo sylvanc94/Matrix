@@ -214,14 +214,31 @@ bool operator==(const MyMat<T,R,C> &lhs, const MyMat<T,R2,C2> &rhs)
         return false;
     }
 
-    for (size_t i = 0; i < numRows; ++i) {
-        for (size_t j = 0; j < numCols; ++j) {
-            if (lhs(i,j) != rhs(i,j)) {
-                return false;
+    if constexpr (std::is_integral_v<T>) {
+        for (size_t i = 0; i < numRows; ++i) {
+            for (size_t j = 0; j < numCols; ++j) {
+                if (lhs(i,j) != rhs(i,j)) {
+                    return false;
+                }
+            }
+        }
+    }
+    else {
+        for (size_t i = 0; i < numRows; ++i) {
+            for (size_t j = 0; j < numCols; ++j) {
+                if (!almost_equal(lhs(i,j), rhs(i,j), 2)) {
+                    return false;
+                }
             }
         }
     }
     return true;
+}
+
+template <typename T, size_t R, size_t C, size_t R2, size_t C2>
+bool operator!=(const MyMat<T,R,C> &lhs, const MyMat<T,R2,C2> &rhs)
+{
+    return !(lhs == rhs);
 }
 
 template <typename T, size_t R, size_t C>

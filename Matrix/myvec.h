@@ -12,7 +12,7 @@
 #include <iterator>
 #include <array>
 #include <initializer_list>
-
+#include "utils.h"
 
 /*!
  * \brief A container abstraction that represents a Euclidean vector
@@ -49,6 +49,8 @@ public:
 
     MyVec(MyVec &&) noexcept = default;
     MyVec& operator=(MyVec &&) noexcept = default;
+    
+    MyVec& normalize();
 
     constexpr typename std::array<T,N>::iterator begin() noexcept { return data_.begin(); }
     constexpr typename std::array<T,N>::const_iterator begin() const noexcept { return data_.begin(); }
@@ -78,6 +80,8 @@ public:
         lhs -= rhs;
         return lhs;
     }
+    
+    bool equals(const MyVec &rhs) const;
 
     double mag() const;
     T mag2() const;
@@ -99,6 +103,11 @@ template <typename T, size_t N>
 MyVec<T,N> operator*(const MyVec<T,N> &, double);
 template <typename T, size_t N>
 MyVec<T,N> operator/(const MyVec<T,N> &, double);
+
+template <typename T, size_t N>
+bool operator==(const MyVec<T,N> &lhs, const MyVec<T,N> &rhs);
+template <typename T, size_t N>
+bool operator!=(const MyVec<T,N> &lhs, const MyVec<T,N> &rhs);
 
 // Render the vector contents to the output stream
 template <typename T, size_t N>

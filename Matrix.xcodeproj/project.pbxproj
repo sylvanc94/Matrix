@@ -29,6 +29,7 @@
 		AD74126026BB969600109449 /* mymat.tpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = mymat.tpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		AD74126126BB969700109449 /* myvec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myvec.h; sourceTree = "<group>"; };
 		AD74126226BB969700109449 /* mymat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mymat.h; sourceTree = "<group>"; };
+		ADD7FA7B26BDBFC200CB9901 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +67,7 @@
 				AD74126126BB969700109449 /* myvec.h */,
 				AD74125F26BB969600109449 /* myvec.tpp */,
 				AD74125826BB964700109449 /* main.cpp */,
+				ADD7FA7B26BDBFC200CB9901 /* utils.h */,
 			);
 			path = Matrix;
 			sourceTree = "<group>";

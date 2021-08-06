@@ -106,7 +106,9 @@ MyMat<T,R,C> operator/(const MyMat<T,R,C> &, double);
 // Comparison
 // Note that the matrices may be of different template dimension, but if transposed they can still be logically equal
 template <typename T, size_t R, size_t C, size_t R2, size_t C2>
-bool operator==(const MyMat<T, R, C> &, const MyMat<T, R2, C2> &);
+bool operator==(const MyMat<T,R,C> &lhs, const MyMat<T,R2,C2> &rhs);
+template <typename T, size_t R, size_t C, size_t R2, size_t C2>
+bool operator!=(const MyMat<T, R, C> &, const MyMat<T, R2, C2> &);
 
 // Render the vector contents to the output stream
 template <typename T, size_t R, size_t C>

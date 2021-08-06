@@ -41,6 +41,20 @@ MyVec<T,N>::MyVec(Iter first, Iter last) :
 }
 
 template <typename T, size_t N>
+MyVec<T,N>& MyVec<T,N>::normalize()
+{
+    double magnitude = mag();
+    if (almost_equal(magnitude, 0.0, 6)) {
+        return *this;
+    }
+    
+    double invMagnitude = 1 / magnitude;
+    std::for_each(data_.begin(), data_.end(), [invMagnitude](T &n) { n *= invMagnitude; });
+    return *this;
+}
+
+
+template <typename T, size_t N>
 T& MyVec<T,N>::operator[](size_t i)
 {
     return data_[i];
@@ -74,6 +88,22 @@ MyVec<T,N>& MyVec<T,N>::operator*=(double rhs)
 }
 
 template <typename T, size_t N>
+bool MyVec<T,N>::equals(const MyVec<T,N> &rhs) const
+{
+    if constexpr (std::is_integral_v<T>) {
+        return data_ == rhs.data_;
+    }
+    else {
+        for (size_t i = 0; i < N; ++i) {
+            if (!almost_equal(data_[i], rhs.data_[i], 2)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+template <typename T, size_t N>
 double MyVec<T,N>::mag() const
 {
     return sqrt(mag2());
@@ -103,8 +133,15 @@ template <typename T2, size_t N2>
 MyVec<T,3> MyVec<T,N>::cross(const MyVec<T2,N2> &rhs) const
 {
     static_assert (N == 2 || N == 3, "Vector cross product requires vector of length 2 or 3");
-    T lz  = (N == 2)  ? 0 : data_[2];
-    T2 rz = (N2 == 2) ? 0 : rhs[2];
+    static_assert (N2 == 2 || N2 == 3, "Vector cross product requires vector of length 2 or 3");
+    T lz = 0;
+    T rz = 0;
+    if constexpr (N == 3) {
+        lz = data_[2];
+    }
+    if constexpr (N2 == 3) {
+        rz = rhs[2];
+    }
     return {data_[1] * rz - lz * rhs[1],
             lz * rhs[0] - data_[0] * rz,
             data_[0] * rhs[1] - data_[1] * rhs[0]};
@@ -133,6 +170,18 @@ MyVec<T,N> operator/(const MyVec<T,N> &vec, double scalar)
     MyVec<T,N> result;
     std::transform(vec.cbegin(), vec.cend(), result.begin(), [scalar](const T &v) { return v / scalar;} );
     return result;
+}
+
+template <typename T, size_t N>
+bool operator==(const MyVec<T,N> &lhs, const MyVec<T,N> &rhs)
+{
+    return lhs.equals(rhs);
+}
+
+template <typename T, size_t N>
+bool operator!=(const MyVec<T,N> &lhs, const MyVec<T,N> &rhs)
+{
+    return !lhs.equals(rhs);
 }
 
 template <typename T, size_t N>
