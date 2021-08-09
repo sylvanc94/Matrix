@@ -10,6 +10,8 @@
 #include <cmath>
 #include <type_traits>
 
+namespace MyVector {
+
 template <typename T, size_t N>
 MyVec<T,N>::MyVec() :
     data_(std::array<T,N>())
@@ -43,16 +45,15 @@ MyVec<T,N>::MyVec(Iter first, Iter last) :
 template <typename T, size_t N>
 MyVec<T,N>& MyVec<T,N>::normalize()
 {
-    double magnitude = mag();
-    if (almost_equal(magnitude, 0.0, 6)) {
+    double mag = magnitude(*this);
+    if (almost_equal(mag, 0.0, 2)) {
         return *this;
     }
     
-    double invMagnitude = 1 / magnitude;
+    double invMagnitude = 1 / mag;
     std::for_each(data_.begin(), data_.end(), [invMagnitude](T &n) { n *= invMagnitude; });
     return *this;
 }
-
 
 template <typename T, size_t N>
 T& MyVec<T,N>::operator[](size_t i)
@@ -87,67 +88,66 @@ MyVec<T,N>& MyVec<T,N>::operator*=(double rhs)
     return *this;
 }
 
-template <typename T, size_t N>
-bool MyVec<T,N>::equals(const MyVec<T,N> &rhs) const
-{
-    if constexpr (std::is_integral_v<T>) {
-        return data_ == rhs.data_;
-    }
-    else {
-        for (size_t i = 0; i < N; ++i) {
-            if (!almost_equal(data_[i], rhs.data_[i], 2)) {
-                return false;
-            }
-        }
-        return true;
-    }
-}
+// Related non-members
 
+// Square of the magnitude
 template <typename T, size_t N>
-double MyVec<T,N>::mag() const
+T magnitude2(const MyVec<T,N> &vec)
 {
-    return sqrt(mag2());
-}
-
-template <typename T, size_t N>
-T MyVec<T,N>::mag2() const
-{
-    return std::accumulate(data_.cbegin(), data_.cend(), 0, [](const T &sum, const T &el) {
+    return std::accumulate(vec.cbegin(), vec.cend(), 0, [](const T &sum, const T &el) {
         return sum + el * el;
     });
 }
 
 template <typename T, size_t N>
-template <typename T2>
-double MyVec<T,N>::dot(const MyVec<T2,N> &rhs) const
+double magnitude(const MyVec<T,N> &vec)
+{
+    return sqrt(magnitude2(vec));
+}
+
+template <typename T, size_t N, typename T2, size_t N2>
+double angle(const MyVec<T,N> &lhs, MyVec<T2,N2> &rhs)
+{
+    double magLhs = magnitude(lhs);
+    double magRhs = magnitude(rhs);
+    if (almost_equal(magLhs, 0., 2) ||
+        almost_equal(magRhs, 0., 2)) {
+        return M_PI_2;
+    }
+    
+    return std::acos( dotProduct(lhs, rhs) / (magLhs * magRhs));
+}
+
+template <typename T, size_t N, typename T2>
+double dotProduct(const MyVec<T,N> &lhs, const MyVec<T2,N> &rhs)
 {
     double product = 0.0;
     for (size_t i = 0; i < N; ++i) {
-        product += data_[i] * rhs[i];
+        product += lhs[i] * rhs[i];
     }
     return product;
 }
 
-template <typename T, size_t N>
-template <typename T2, size_t N2>
-MyVec<T,3> MyVec<T,N>::cross(const MyVec<T2,N2> &rhs) const
+template <typename T, size_t N, typename T2, size_t N2>
+MyVec<T,3> crossProduct(const MyVec<T,N> &lhs, const MyVec<T2,N2> &rhs)
 {
     static_assert (N == 2 || N == 3, "Vector cross product requires vector of length 2 or 3");
     static_assert (N2 == 2 || N2 == 3, "Vector cross product requires vector of length 2 or 3");
     T lz = 0;
     T rz = 0;
     if constexpr (N == 3) {
-        lz = data_[2];
+        lz = lhs[2];
     }
     if constexpr (N2 == 3) {
         rz = rhs[2];
     }
-    return {data_[1] * rz - lz * rhs[1],
-            lz * rhs[0] - data_[0] * rz,
-            data_[0] * rhs[1] - data_[1] * rhs[0]};
+    MyVec<T,3> ret;
+    ret[0] = lhs[1] * rz - lz * rhs[1];
+    ret[1] = lz * rhs[0] - lhs[0] * rz;
+    ret[2] = lhs[0] * rhs[1] - lhs[1] * rhs[0];
+    return ret;
 }
 
-// Related non-members
 template <typename T, size_t N>
 MyVec<T,N> operator*(double scalar, const MyVec<T,N> &vec)
 {
@@ -172,16 +172,34 @@ MyVec<T,N> operator/(const MyVec<T,N> &vec, double scalar)
     return result;
 }
 
-template <typename T, size_t N>
-bool operator==(const MyVec<T,N> &lhs, const MyVec<T,N> &rhs)
+template <typename T, size_t N, typename T2, size_t N2>
+bool operator==(const MyVec<T,N> &lhs, const MyVec<T2,N2> &rhs)
 {
-    return lhs.equals(rhs);
+    if constexpr (N != N2) {
+        return false;
+    }
+    if constexpr (std::is_integral_v<T> || std::is_integral_v<T2>) {
+        for (size_t i = 0; i < N; ++i) {
+            if (lhs[i] != rhs[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    else {
+        for (size_t i = 0; i < N; ++i) {
+            if (!almost_equal(lhs[i], rhs[i], 2)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
-template <typename T, size_t N>
-bool operator!=(const MyVec<T,N> &lhs, const MyVec<T,N> &rhs)
+template <typename T, size_t N, typename T2, size_t N2>
+bool operator!=(const MyVec<T,N> &lhs, const MyVec<T2,N2> &rhs)
 {
-    return !lhs.equals(rhs);
+    return !(lhs == rhs);
 }
 
 template <typename T, size_t N>
@@ -193,3 +211,4 @@ std::ostream& operator<<(std::ostream &os, const MyVec<T,N> &v)
     return os;
 }
 
+}

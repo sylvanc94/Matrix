@@ -33,6 +33,8 @@
  * addition, subtraction, scalar multiply/divide. Also available are vector dot product,
  * cross product (for 2 or 3D vectors only), and the vectors can be queried for magnitude.
  */
+namespace MyVector {
+
 template <typename T = double, size_t N = 3>
 class MyVec {
 public:
@@ -52,13 +54,13 @@ public:
     
     MyVec& normalize();
 
-    constexpr typename std::array<T,N>::iterator begin() noexcept { return data_.begin(); }
-    constexpr typename std::array<T,N>::const_iterator begin() const noexcept { return data_.begin(); }
-    constexpr typename std::array<T,N>::const_iterator cbegin() const noexcept { return data_.cbegin(); }
+    constexpr auto begin() noexcept { return data_.begin(); }
+    constexpr auto begin() const noexcept { return data_.begin(); }
+    constexpr auto cbegin() const noexcept { return data_.cbegin(); }
 
-    constexpr typename std::array<T,N>::iterator end() noexcept { return data_.end(); }
-    constexpr typename std::array<T,N>::const_iterator end() const noexcept { return data_.end(); }
-    constexpr typename std::array<T,N>::const_iterator cend() const noexcept { return data_.cend(); }
+    constexpr auto end() noexcept { return data_.end(); }
+    constexpr auto end() const noexcept { return data_.end(); }
+    constexpr auto cend() const noexcept { return data_.cend(); }
 
     constexpr size_t size() const noexcept { return data_.size(); }
     constexpr bool empty() const noexcept { return data_.empty(); }
@@ -81,20 +83,26 @@ public:
         return lhs;
     }
     
-    bool equals(const MyVec &rhs) const;
-
-    double mag() const;
-    T mag2() const;
-
-    template <typename T2>
-    double dot(const MyVec<T2,N> &rhs) const;
-
-    template <typename T2, size_t N2>
-    MyVec<T,3> cross(const MyVec<T2,N2> &rhs) const;
-
 private:
     std::array<T, N> data_;
 };
+
+// Vector magnitude
+// 2 versions: magnitude
+// magnitude2: square of the magnitude to avoid unnecessary sqrt calculation
+template <typename T, size_t N>
+T magnitude2(const MyVec<T,N> &);
+template <typename T, size_t N>
+double magnitude(const MyVec<T,N> &);
+
+template <typename T, size_t N, typename T2, size_t N2>
+double angle(const MyVec<T,N> &lhs, const MyVec<T2,N2> &rhs);
+
+template <typename T, size_t N, typename T2>
+double dotProduct(const MyVec<T,N> &lhs, const MyVec<T2,N> &rhs);
+
+template <typename T, size_t N, typename T2, size_t N2>
+MyVec<T,3> crossProduct(const MyVec<T,N> &lhs, const MyVec<T2,N2> &rhs);
 
 // Scalar multiplication and division
 template <typename T, size_t N>
@@ -104,14 +112,17 @@ MyVec<T,N> operator*(const MyVec<T,N> &, double);
 template <typename T, size_t N>
 MyVec<T,N> operator/(const MyVec<T,N> &, double);
 
-template <typename T, size_t N>
-bool operator==(const MyVec<T,N> &lhs, const MyVec<T,N> &rhs);
-template <typename T, size_t N>
-bool operator!=(const MyVec<T,N> &lhs, const MyVec<T,N> &rhs);
+// Comparison operators
+template <typename T, size_t N, typename T2, size_t N2>
+bool operator==(const MyVec<T,N> &lhs, const MyVec<T2,N2> &rhs);
+template <typename T, size_t N, typename T2, size_t N2>
+bool operator!=(const MyVec<T,N> &lhs, const MyVec<T2,N2> &rhs);
 
 // Render the vector contents to the output stream
 template <typename T, size_t N>
 std::ostream& operator<<(std::ostream &, const MyVec<T,N> &);
+
+} // namespace MyVector
 
 #include "myvec.tpp"
 

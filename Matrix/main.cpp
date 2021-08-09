@@ -11,6 +11,7 @@
 #include "mymat.h"
 
 using namespace std;
+using namespace MyVector;
 
 int main()
 {
@@ -50,15 +51,20 @@ int main()
     cout << vec3 << endl;
 
     MyVec<double, 2> vec2{1, 2};
+    MyVec<int, 2> vecInt2{1, 2};
     cout << vec2 << endl;
+    cout << "Vec compare" << endl;
+    cout << std::boolalpha << (vec2 == vecInt2) << endl;
 
-    MyVec<> defaultVec;
+    MyVec defaultVec;
 
     MyVec<int, 3> vecInt{1, 2, 3};
-    cout << vecInt.mag2() << endl;
-    cout << vecInt.mag() << endl;
+    cout << magnitude2(vecInt) << endl;
+    cout << magnitude(vecInt) << endl;
     MyVec<double, 3> vecDouble2{1.2, 3.5, 6.28};
     vecDouble2 = vec3;
+    
+    cout << "Dot product: " << dotProduct(vecInt, vecDouble2) << endl;
 
     cout << "2 * vec: " << 2 * vecDouble2 << endl;
     cout << "vec * 2: " << vecDouble2 * 2 << endl;
@@ -67,7 +73,9 @@ int main()
 //    vec2 = vec3;  // different length, shouldn't compile.
     MyVec<int, 3> crossA{1, 2};
     MyVec<int, 2> crossB{1, 5};
-    cout << crossA.cross(crossB) << endl;
+    cout << "Cross product:" << endl;
+//    cout << crossA.cross(crossB) << endl;
+    cout << crossProduct(crossA, crossB) << endl;
 
     MyMat<double, 2, 3> matOrig = {1, 3, 5,
                           2, 4, 6};
@@ -86,6 +94,12 @@ int main()
     cout << std::boolalpha << (exp == exp) << endl;
     cout << (exp == exp2) << endl;
     cout << (exp == exp2.transpose()) << endl;
+    
+    auto expT = exp.copyTransposed();
+    cout << "exp" << endl;
+    cout << exp << endl;
+    cout << "exp Transposed" << endl;
+    cout << expT << endl;
 
     MyMat matA = {1,2,3,
                  4,5,6,
@@ -97,9 +111,20 @@ int main()
     cout << (matA == matB) << endl;
     cout << (matA == matB.transpose()) << endl;
     
+    cout << "MatA" << endl;
+    cout << matA << endl;
+    
+    cout << "MatA copy transposed" << endl;
+    auto tc = matA.copyTransposed();
+    cout << tc << endl;
+    
     MyVec<double> normVec { 1, 1, 1};
     cout << normVec << ",  " << normVec.normalize() << endl;
     cout << (normVec == normVec) << endl;
     
+    MyVec<double, 2> vec10 {1,0};
+    MyVec<double, 2> vec11 {0,1};
+//    cout << rad2deg(vec10.angleTo(vec11)) << endl;
+    cout << rad2deg(angle(vec10, vec11)) << endl;
     return 0;
 }

@@ -24,6 +24,18 @@ MyMat<T,R,C>::MyMat(std::initializer_list<T> li) :
 }
 
 template <typename T, size_t R, size_t C>
+MyMat<T,C,R> MyMat<T,R,C>::copyTransposed() const
+{
+    MyMat<T,C,R> copy;
+    for (size_t i = 0; i < R; ++i) {
+        for (size_t j = 0; j < C; ++j) {
+            copy(j,i) = (*this)(i,j);
+        }
+    }
+    return copy;
+}
+
+template <typename T, size_t R, size_t C>
 MyMat<T,R,C> MyMat<T,R,C>::identity()
 {
     static_assert (R == C, "Identity matrix must be square");
@@ -106,14 +118,12 @@ MyMat<T,R,C>& MyMat<T,R,C>::toLowerTriangular()
 }
 
 template <typename T, size_t R, size_t C>
-constexpr
 size_t MyMat<T,R,C>::rows() const noexcept
 {
     return transposed_ ? C : R;
 }
 
 template <typename T, size_t R, size_t C>
-constexpr
 size_t MyMat<T,R,C>::cols() const noexcept
 {
     return transposed_ ? R : C;

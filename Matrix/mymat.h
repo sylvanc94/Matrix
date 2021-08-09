@@ -47,6 +47,8 @@ public:
     MyMat(MyMat &&) noexcept = default;
     MyMat& operator=(MyMat &&) noexcept = default;
     
+    MyMat<T,C,R> copyTransposed() const;
+    
     static MyMat identity();
     static MyMat upperTriangular();
     static MyMat lowerTriangular();
@@ -56,18 +58,18 @@ public:
     MyMat& toLowerTriangular();
     MyMat& transpose();
 
-    constexpr typename std::array<T,R*C>::iterator begin() noexcept { return data_.begin(); }
-    constexpr typename std::array<T,R*C>::const_iterator begin() const noexcept { return data_.begin(); }
-    constexpr typename std::array<T,R*C>::const_iterator cbegin() const noexcept { return data_.cbegin(); }
+    constexpr auto begin() noexcept { return data_.begin(); }
+    constexpr auto begin() const noexcept { return data_.begin(); }
+    constexpr auto cbegin() const noexcept { return data_.cbegin(); }
 
-    constexpr typename std::array<T,R*C>::iterator end() noexcept { return data_.end(); }
-    constexpr typename std::array<T,R*C>::const_iterator end() const noexcept { return data_.end(); }
-    constexpr typename std::array<T,R*C>::const_iterator cend() const noexcept { return data_.cend(); }
+    constexpr auto end() noexcept { return data_.end(); }
+    constexpr auto end() const noexcept { return data_.end(); }
+    constexpr auto cend() const noexcept { return data_.cend(); }
 
     constexpr size_t size() const noexcept { return data_.size(); }
     constexpr bool  empty() const noexcept { return data_.empty(); }
-    constexpr size_t rows() const noexcept;
-    constexpr size_t cols() const noexcept;
+    size_t rows() const noexcept;
+    size_t cols() const noexcept;
     constexpr bool square() const { return R == C; }
 
           T& operator() (size_t row, size_t col);

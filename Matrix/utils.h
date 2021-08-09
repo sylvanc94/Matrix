@@ -13,7 +13,7 @@
 #include <cmath>
 
 // https://en.cppreference.com/w/cpp/types/numeric_limits/epsilon
-template<class T>
+template<typename T>
 typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type
     almost_equal(T x, T y, int ulp)
 {
@@ -22,6 +22,11 @@ typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type
     return std::fabs(x-y) <= std::numeric_limits<T>::epsilon() * std::fabs(x+y) * ulp
         // unless the result is subnormal
         || std::fabs(x-y) < std::numeric_limits<T>::min();
+}
+
+double rad2deg(double rad)
+{
+    return rad * 180. / M_PI;
 }
 
 #endif /* utils_h */
