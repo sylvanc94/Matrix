@@ -91,9 +91,9 @@ private:
 // 2 versions: magnitude
 // magnitude2: square of the magnitude to avoid unnecessary sqrt calculation
 template <typename T, size_t N>
-T magnitude2(const MyVec<T,N> &);
-template <typename T, size_t N>
 double magnitude(const MyVec<T,N> &);
+template <typename T, size_t N>
+T magnitude2(const MyVec<T,N> &);
 
 template <typename T, size_t N, typename T2, size_t N2>
 double angle(const MyVec<T,N> &lhs, const MyVec<T2,N2> &rhs);

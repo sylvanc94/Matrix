@@ -7,6 +7,8 @@
 
 #include <algorithm>
 
+namespace MyMatrix {
+
 template <typename T, size_t R, size_t C>
 MyMat<T,R,C>::MyMat() :
     data_(std::array<T, R*C>())
@@ -33,46 +35,6 @@ MyMat<T,C,R> MyMat<T,R,C>::copyTransposed() const
         }
     }
     return copy;
-}
-
-template <typename T, size_t R, size_t C>
-MyMat<T,R,C> MyMat<T,R,C>::identity()
-{
-    static_assert (R == C, "Identity matrix must be square");
-    static_assert (R > 0, "Identity matrix can't be empty");
-    MyMat<T,R,C> id;
-    for (size_t i = 0; i < R*C; i += C + 1) {
-        id.data_[i] = 1;
-    }
-    return id;
-}
-
-template <typename T, size_t R, size_t C>
-MyMat<T,R,C> MyMat<T,R,C>::upperTriangular()
-{
-    static_assert (R == C, "Triangular matrix must be square");
-    static_assert (R > 0, "Triangular matrix can't be empty");
-    MyMat<T,R,C> ut;
-    for (size_t i = 0; i < R; ++i) {
-        for (size_t j = 0; j <= i; ++j) {
-            ut(j,i) = 1;
-        }
-    }
-    return ut;
-}
-
-template <typename T, size_t R, size_t C>
-MyMat<T,R,C> MyMat<T,R,C>::lowerTriangular()
-{
-    static_assert (R == C, "Triangular matrix must be square");
-    static_assert (R > 0, "Triangular matrix can't be empty");
-    MyMat<T,R,C> lt;
-    for (size_t i = 0; i < R; ++i) {
-        for (size_t j = 0; j <= i; ++j) {
-            lt(i,j) = 1;
-        }
-    }
-    return lt;
 }
 
 template <typename T, size_t R, size_t C>
@@ -189,6 +151,46 @@ std::ostream& MyMat<T,R,C>::renderToStream(std::ostream &os) const
 
 // Related non-members
 template <typename T, size_t R, size_t C>
+MyMat<T,R,C> makeIdentity()
+{
+    static_assert (R == C, "Identity matrix must be square");
+    static_assert (R > 0, "Identity matrix can't be empty");
+    MyMat<T,R,C> id;
+    for (size_t i = 0; i < R; ++i) {
+        id(i,i) = 1;
+    }
+    return id;
+}
+
+template <typename T, size_t R, size_t C>
+MyMat<T,R,C> makeUpperTriangular()
+{
+    static_assert (R == C, "Triangular matrix must be square");
+    static_assert (R > 0, "Triangular matrix can't be empty");
+    MyMat<T,R,C> ut;
+    for (size_t i = 0; i < R; ++i) {
+        for (size_t j = 0; j <= i; ++j) {
+            ut(j,i) = 1;
+        }
+    }
+    return ut;
+}
+
+template <typename T, size_t R, size_t C>
+MyMat<T,R,C> makeLowerTriangular()
+{
+    static_assert (R == C, "Triangular matrix must be square");
+    static_assert (R > 0, "Triangular matrix can't be empty");
+    MyMat<T,R,C> lt;
+    for (size_t i = 0; i < R; ++i) {
+        for (size_t j = 0; j <= i; ++j) {
+            lt(i,j) = 1;
+        }
+    }
+    return lt;
+}
+
+template <typename T, size_t R, size_t C>
 MyMat<T,R,C> operator*(double scalar, const MyMat<T,R,C> &vec)
 {
     MyMat<T,R,C> result;
@@ -256,3 +258,5 @@ std::ostream& operator<<(std::ostream &os, const MyMat<T,R,C> &m)
 {
     return m.renderToStream(os);
 }
+
+} // namespace MyMatrix

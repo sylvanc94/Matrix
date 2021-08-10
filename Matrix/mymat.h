@@ -33,6 +33,8 @@
  * A set of static factory functions can create an identity matrix, or upper/lower triangular
  * matrices with 1/0 values.
  */
+namespace MyMatrix {
+
 template <typename T = double, size_t R = 3, size_t C = R>
 class MyMat {
 public:
@@ -49,10 +51,6 @@ public:
     
     MyMat<T,C,R> copyTransposed() const;
     
-    static MyMat identity();
-    static MyMat upperTriangular();
-    static MyMat lowerTriangular();
-
     MyMat& toDiagonal();
     MyMat& toUpperTriangular();
     MyMat& toLowerTriangular();
@@ -97,6 +95,14 @@ private:
     bool transposed_ = false;
 };
 
+// Factory methods
+template <typename T = double, size_t R = 3, size_t C = R>
+MyMat<T,R,C> makeIdentity();
+template <typename T = double, size_t R = 3, size_t C = R>
+MyMat<T,R,C> makeUpperTriangular();
+template <typename T = double, size_t R = 3, size_t C = R>
+MyMat<T,R,C> makeLowerTriangular();
+
 // Scalar multiplication and division
 template <typename T, size_t R, size_t C>
 MyMat<T,R,C> operator*(double, const MyMat<T,R,C> &);
@@ -115,6 +121,8 @@ bool operator!=(const MyMat<T, R, C> &, const MyMat<T, R2, C2> &);
 // Render the vector contents to the output stream
 template <typename T, size_t R, size_t C>
 std::ostream& operator<<(std::ostream &, const MyMat<T,R,C> &);
+
+} // namespace MyMatrix
 
 #include "mymat.tpp"
 

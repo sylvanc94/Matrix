@@ -90,6 +90,12 @@ MyVec<T,N>& MyVec<T,N>::operator*=(double rhs)
 
 // Related non-members
 
+template <typename T, size_t N>
+double magnitude(const MyVec<T,N> &vec)
+{
+    return sqrt(magnitude2(vec));
+}
+
 // Square of the magnitude
 template <typename T, size_t N>
 T magnitude2(const MyVec<T,N> &vec)
@@ -97,12 +103,6 @@ T magnitude2(const MyVec<T,N> &vec)
     return std::accumulate(vec.cbegin(), vec.cend(), 0, [](const T &sum, const T &el) {
         return sum + el * el;
     });
-}
-
-template <typename T, size_t N>
-double magnitude(const MyVec<T,N> &vec)
-{
-    return sqrt(magnitude2(vec));
 }
 
 template <typename T, size_t N, typename T2, size_t N2>
@@ -211,4 +211,4 @@ std::ostream& operator<<(std::ostream &os, const MyVec<T,N> &v)
     return os;
 }
 
-}
+} // namespace MyVector

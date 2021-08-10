@@ -12,15 +12,24 @@
 
 using namespace std;
 using namespace MyVector;
+using namespace MyMatrix;
 
 int main()
 {
     cout << "Hello World!" << endl;
-    auto id = MyMat<double>::identity();
-    cout << id << endl;
+//    auto id = MyMat<double>::identity();
+//    cout << id << endl;
+//    auto id2 = makeIdentity();
+    MyMat id2 = makeIdentity<double,3,3>();
+    cout << id2 << endl;
+    
+    MyMat id3 = makeIdentity<double,5>();
+    cout << id3 << endl;
 
-    cout << MyMat<double>::upperTriangular() << endl;
-    cout << MyMat<double>::lowerTriangular() << endl;
+//    cout << MyMat<double>::upperTriangular() << endl;
+//    cout << MyMat<double>::lowerTriangular() << endl;
+    cout << makeUpperTriangular() << endl;
+    cout << makeLowerTriangular() << endl;
 
     MyMat<double> mat;
     cout << mat << endl;
